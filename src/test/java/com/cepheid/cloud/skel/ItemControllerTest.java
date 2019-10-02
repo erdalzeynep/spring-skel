@@ -20,6 +20,5 @@ public class ItemControllerTest extends TestBase {
     
     Collection<Item> items = itemController.get(new GenericType<Collection<Item>>() {
     });
-
   }
 }

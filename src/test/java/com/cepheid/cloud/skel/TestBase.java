@@ -30,22 +30,17 @@ public class TestBase {
     mClient = createClient();
   }
 
-  
   public Builder getBuilder(String path, Object... values) {
     URI uri = UriBuilder.fromUri(mServerUri + path).build(values);
 
     WebTarget webTarget = mClient.target(uri);
     webTarget = webTarget.register(MultiPartFeature.class);
 
-    Builder builder = webTarget.request(MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_OCTET_STREAM_TYPE);
-
-    return builder;
+    return webTarget.request(MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_OCTET_STREAM_TYPE);
   }
 
   protected Client createClient() {
     ClientBuilder clientBuilder = ClientBuilder.newBuilder();
     return clientBuilder.build();
   }
-  
-  
 }

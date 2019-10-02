@@ -22,13 +22,11 @@ public class JerseyConfig extends ResourceConfig {
 
     packages("org.glassfish.jersey.examples.multipart");
     register(MultiPartFeature.class);
-
     
     configureSwagger();    
     
   }
-  
-  
+
   private BeanConfig configureSwagger() {
     // support Swagger
     register(ApiListingResource.class);
@@ -45,6 +43,5 @@ public class JerseyConfig extends ResourceConfig {
     beanConfig.setTitle("REST API");
     beanConfig.setDescription("The REST API is used from the JavaScript web GUI.");
     return beanConfig;
-  }  
-  
+  }
 }
