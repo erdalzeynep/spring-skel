@@ -1,6 +1,6 @@
 package com.cepheid.cloud.skel.controller;
 
-import com.cepheid.cloud.skel.dto.ItemDto;
+import com.cepheid.cloud.skel.dto.ItemDTO;
 import com.cepheid.cloud.skel.model.Item;
 import com.cepheid.cloud.skel.repository.ItemRepository;
 import com.cepheid.cloud.skel.service.ItemService;
@@ -21,14 +21,11 @@ import java.util.Collection;
 @Path("/api/1.0")
 @Api()
 public class ItemController {
-    @Autowired
-    private ItemService service;
-
-    private final ItemRepository mItemRepository;
+    private final ItemService service;
 
     @Autowired
-    public ItemController(ItemRepository itemRepository) {
-        mItemRepository = itemRepository;
+    public ItemController(ItemService service) {
+        this.service = service;
     }
 
     @GET
@@ -42,10 +39,10 @@ public class ItemController {
     @POST
     @Path("/addItem")
     @Produces(MediaType.APPLICATION_JSON)
-    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
-    public ItemDto addItem(@RequestBody Item item) {
+    @Transactional(propagation = Propagation.REQUIRED)
+    public ItemDTO addItem(@RequestBody Item item) {
        Item addedItem = service.addItem(item);
-       return new ItemDto(addedItem.getId(), addedItem.getName());
+       return new ItemDTO(addedItem.getId(), addedItem.getName());
     }
 
     @DELETE

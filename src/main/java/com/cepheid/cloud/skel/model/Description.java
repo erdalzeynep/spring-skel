@@ -1,5 +1,7 @@
 package com.cepheid.cloud.skel.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
@@ -7,6 +9,7 @@ public class Description extends AbstractEntity {
 
     @ManyToOne
     @JoinColumn(name = "item_id")
+    @JsonIgnoreProperties("descriptions")
     private Item item;
 
     @Column

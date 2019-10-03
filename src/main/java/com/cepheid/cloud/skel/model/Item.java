@@ -1,5 +1,8 @@
 package com.cepheid.cloud.skel.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -10,6 +13,8 @@ public class Item extends AbstractEntity {
     private String name;
     @Column
     private State state = State.UNDEFINED;
+
+    @JsonIgnoreProperties("item")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "item", cascade = CascadeType.ALL)
     private Set<Description> descriptions;
 

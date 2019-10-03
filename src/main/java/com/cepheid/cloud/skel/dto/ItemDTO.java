@@ -1,13 +1,13 @@
 package com.cepheid.cloud.skel.dto;
 
-public class ItemDto {
+public class ItemDTO {
     Long itemId;
     String name;
 
-    public ItemDto() {
+    public ItemDTO() {
     }
 
-    public ItemDto(Long itemId, String name) {
+    public ItemDTO(Long itemId, String name) {
         this.itemId = itemId;
         this.name = name;
     }

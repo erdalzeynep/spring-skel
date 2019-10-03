@@ -33,4 +33,8 @@ public class ItemService {
             return null;
         }
     }
+
+    public Item updateItem(Item updatedItem){
+        return repository.save(updatedItem);
+    }
 }
