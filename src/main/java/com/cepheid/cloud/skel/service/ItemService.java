@@ -24,4 +24,13 @@ public class ItemService {
     public List<Item> getItems() {
         return repository.findAll();
     }
+
+    public Item getItemById(Long itemId){
+        if(repository.existsById(itemId)){
+            return repository.getOne(itemId);
+        }
+        else{
+            return null;
+        }
+    }
 }

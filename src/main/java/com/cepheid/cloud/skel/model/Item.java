@@ -1,9 +1,6 @@
 package com.cepheid.cloud.skel.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
@@ -13,7 +10,7 @@ public class Item extends AbstractEntity {
     private String name;
     @Column
     private State state = State.UNDEFINED;
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "item", cascade = CascadeType.ALL)
     private Set<Description> descriptions;
 
     enum State {
