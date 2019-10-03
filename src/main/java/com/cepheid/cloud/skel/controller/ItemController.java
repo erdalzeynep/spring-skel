@@ -5,6 +5,7 @@ import java.util.Collection;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
+import com.cepheid.cloud.skel.repository.ItemRepository;
 import com.cepheid.cloud.skel.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,13 @@ public class ItemController {
     @Autowired
     private ItemService service;
 
+    private final ItemRepository mItemRepository;
+
+    @Autowired
+    public ItemController(ItemRepository itemRepository) {
+        mItemRepository = itemRepository;
+    }
+
     @GET
     @Path("/getItems")
     @Produces(MediaType.APPLICATION_JSON)
@@ -37,9 +45,8 @@ public class ItemController {
     @Path("/addItem")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
-    public Long addItem(@RequestBody Item item) {
-        Item returnItem = service.addItem(item);
-        return returnItem.getId();
+    public Item addItem(@RequestBody Item item) {
+       return service.addItem(item);
     }
 
     @DELETE

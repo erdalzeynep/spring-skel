@@ -15,32 +15,35 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, classes = {
-    SkelApplication.class })
+        SkelApplication.class})
 public class TestBase {
-  private String mServerUri;
-  
-  protected Client mClient;
+    private String mServerUri;
 
-  @Value("${server.port}")
-  protected int mPort;
+    protected Client mClient;
 
-  @PostConstruct
-  public void postConstruct() {
-    mServerUri = "http://localhost:" + mPort;
-    mClient = createClient();
-  }
+    protected String pathPrefix;
 
-  public Builder getBuilder(String path, Object... values) {
-    URI uri = UriBuilder.fromUri(mServerUri + path).build(values);
+    @Value("${server.port}")
+    protected int mPort;
 
-    WebTarget webTarget = mClient.target(uri);
-    webTarget = webTarget.register(MultiPartFeature.class);
+    @PostConstruct
+    public void postConstruct() {
+        pathPrefix = "/app/api/1.0";
+        mServerUri = "http://localhost:" + mPort + pathPrefix;
+        mClient = createClient();
+    }
 
-    return webTarget.request(MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_OCTET_STREAM_TYPE);
-  }
+    public Builder getBuilder(String path, Object... values) {
+        URI uri = UriBuilder.fromUri(mServerUri + path).build(values);
 
-  protected Client createClient() {
-    ClientBuilder clientBuilder = ClientBuilder.newBuilder();
-    return clientBuilder.build();
-  }
+        WebTarget webTarget = mClient.target(uri);
+        webTarget = webTarget.register(MultiPartFeature.class);
+
+        return webTarget.request(MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_OCTET_STREAM_TYPE);
+    }
+
+    protected Client createClient() {
+        ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+        return clientBuilder.build();
+    }
 }
