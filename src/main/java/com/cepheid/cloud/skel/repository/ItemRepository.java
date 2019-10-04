@@ -4,6 +4,9 @@ import com.cepheid.cloud.skel.model.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
+    public void deleteItemsByState(Item.State state);
 }

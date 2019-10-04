@@ -1,7 +1,7 @@
 package com.cepheid.cloud.skel.model;
 
+import com.cepheid.cloud.skel.dto.CreateItemDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -12,14 +12,31 @@ public class Item extends AbstractEntity {
     @Column
     private String name;
     @Column
-    private State state = State.UNDEFINED;
+    private State state ;
 
     @JsonIgnoreProperties("item")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "item", cascade = CascadeType.ALL)
     private Set<Description> descriptions;
 
-    enum State {
-        VALID, INVALID, UNDEFINED;
+    public enum State {
+        VALID {
+            @Override
+            public String toString() {
+                return "valid";
+            }
+        },
+        INVALID {
+            @Override
+            public String toString() {
+                return "invalid";
+            }
+        },
+        UNDEFINED {
+            @Override
+            public String toString() {
+                return "undefined";
+            }
+        }
     }
 
     public Item() {
@@ -27,6 +44,11 @@ public class Item extends AbstractEntity {
 
     public Item(String name) {
         this.name = name;
+    }
+
+    public Item(CreateItemDTO createItemDTO) {
+
+        this.name = createItemDTO.getName();
     }
 
     public String getName() {

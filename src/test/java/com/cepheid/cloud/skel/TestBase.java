@@ -10,7 +10,11 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
+import com.cepheid.cloud.skel.repository.DescriptionRepository;
+import com.cepheid.cloud.skel.repository.ItemRepository;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.junit.Before;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -25,6 +29,18 @@ public class TestBase {
 
     @Value("${server.port}")
     protected int mPort;
+
+    @Autowired
+    protected ItemRepository itemRepository;
+
+    @Autowired
+    protected DescriptionRepository descriptionRepository;
+
+    @Before
+    public void cleanDb(){
+        itemRepository.deleteAll();
+    }
+
 
     @PostConstruct
     public void postConstruct() {

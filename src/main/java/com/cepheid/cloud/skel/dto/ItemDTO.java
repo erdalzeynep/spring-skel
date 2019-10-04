@@ -1,15 +1,19 @@
 package com.cepheid.cloud.skel.dto;
 
+import com.cepheid.cloud.skel.model.Item;
+
+import java.util.Objects;
+
 public class ItemDTO {
-    Long itemId;
-    String name;
+    private Long itemId;
+    private String name;
 
     public ItemDTO() {
     }
 
-    public ItemDTO(Long itemId, String name) {
-        this.itemId = itemId;
-        this.name = name;
+    public ItemDTO(Item item) {
+        this.itemId = item.getId();
+        this.name = item.getName();
     }
 
     public Long getItemId() {
@@ -26,5 +30,14 @@ public class ItemDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ItemDTO itemDTO = (ItemDTO) o;
+        return Objects.equals(itemId, itemDTO.itemId) &&
+                Objects.equals(name, itemDTO.name);
     }
 }

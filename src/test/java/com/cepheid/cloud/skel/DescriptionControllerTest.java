@@ -4,17 +4,13 @@ import com.cepheid.cloud.skel.dto.CreateDescriptionDTO;
 import com.cepheid.cloud.skel.dto.DescriptionDTO;
 import com.cepheid.cloud.skel.model.Description;
 import com.cepheid.cloud.skel.model.Item;
-import com.cepheid.cloud.skel.repository.DescriptionRepository;
-import com.cepheid.cloud.skel.repository.ItemRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.GenericType;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,11 +19,6 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 public class DescriptionControllerTest extends TestBase {
-    @Autowired
-    ItemRepository itemRepository;
-
-    @Autowired
-    DescriptionRepository descriptionRepository;
 
     @Test
     public void shouldAddDescriptionForOneItem() {
