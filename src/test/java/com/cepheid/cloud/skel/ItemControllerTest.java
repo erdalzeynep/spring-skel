@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(SpringRunner.class)
 public class ItemControllerTest extends TestBase {
@@ -128,5 +129,21 @@ public class ItemControllerTest extends TestBase {
         Item updatedItemInDb = itemRepository.findById(item.getId()).get();
         assertEquals("updated item1", updatedItemInDb.getName());
         assertEquals("VALID", updatedItemInDb.getState().toString());
+    }
+
+    @Test
+    public void shouldDeleteItemDescriptionsAfterDeleteTheItem() {
+
+        Item item = itemRepository.save(new Item("item1"));
+
+        Description description1 = descriptionRepository.save(new Description(item, "item1 desc1"));
+        Description description2 = descriptionRepository.save(new Description(item, "item1 desc2"));
+
+        Builder itemController = getBuilder("/deleteItem/{itemId}", item.getId());
+        itemController.delete(new GenericType<Response>() {
+        });
+
+        assertFalse(descriptionRepository.findById(description1.getId()).isPresent());
+        assertFalse(descriptionRepository.findById(description2.getId()).isPresent());
     }
 }
