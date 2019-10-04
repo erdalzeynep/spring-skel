@@ -2,9 +2,9 @@ package com.cepheid.cloud.skel.controller;
 
 import com.cepheid.cloud.skel.dto.CreateDescriptionDTO;
 import com.cepheid.cloud.skel.dto.DescriptionDTO;
+import com.cepheid.cloud.skel.dto.UpdateDescriptionDTO;
 import com.cepheid.cloud.skel.model.Description;
 import com.cepheid.cloud.skel.model.Item;
-import com.cepheid.cloud.skel.repository.DescriptionRepository;
 import com.cepheid.cloud.skel.service.DescriptionService;
 import com.cepheid.cloud.skel.service.ItemService;
 import io.swagger.annotations.Api;
@@ -58,9 +58,25 @@ public class DescriptionController {
     public Collection<DescriptionDTO> getDescriptions(@PathParam("itemId") Long itemID) {
         List<Description> descriptions = descriptionService.getDescriptionsByItemId(itemID);
         List<DescriptionDTO> descriptionDtoList = new ArrayList<>();
-        for(Description description : descriptions){
+        for (Description description : descriptions) {
             descriptionDtoList.add(new DescriptionDTO(description));
         }
         return descriptionDtoList;
+    }
+
+    @PUT
+    @Path("/updateDescription/{descriptionId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional(propagation = Propagation.REQUIRED)
+    public DescriptionDTO updateDescription(@PathParam("descriptionId") long descriptionId, UpdateDescriptionDTO descriptionBody) {
+        Description description = descriptionService.getDescriptionById(descriptionId);
+        if (description!=null){
+            description.setDescription(descriptionBody.getDescription());
+            Description updatedDescription = descriptionService.updateDescription(description);
+            return new DescriptionDTO(updatedDescription);
+        }
+        else{
+            return null;
+        }
     }
 }

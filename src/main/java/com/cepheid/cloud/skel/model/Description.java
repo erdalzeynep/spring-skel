@@ -1,5 +1,7 @@
 package com.cepheid.cloud.skel.model;
 
+import com.cepheid.cloud.skel.dto.DescriptionDTO;
+import com.cepheid.cloud.skel.dto.UpdateDescriptionDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;

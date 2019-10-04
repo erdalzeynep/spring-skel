@@ -34,7 +34,6 @@ public class ItemService {
         return itemsWithGivenState;
     }
 
-
     public Item getItemById(Long itemId) {
         Optional item = repository.findById(itemId);
         if (item.isPresent()) {

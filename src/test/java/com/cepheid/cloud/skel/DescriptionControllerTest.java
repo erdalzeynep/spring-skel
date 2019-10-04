@@ -2,6 +2,7 @@ package com.cepheid.cloud.skel;
 
 import com.cepheid.cloud.skel.dto.CreateDescriptionDTO;
 import com.cepheid.cloud.skel.dto.DescriptionDTO;
+import com.cepheid.cloud.skel.dto.UpdateDescriptionDTO;
 import com.cepheid.cloud.skel.model.Description;
 import com.cepheid.cloud.skel.model.Item;
 import org.junit.Test;
@@ -11,9 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.GenericType;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -37,7 +36,7 @@ public class DescriptionControllerTest extends TestBase {
     }
 
     @Test
-    public void shouldGetPersistedDescriptionsForSpecificItem(){
+    public void shouldGetPersistedDescriptionsForSpecificItem() {
         Item item1 = new Item("item1");
         Item persistedItem1 = itemRepository.save(item1);
 
@@ -52,10 +51,26 @@ public class DescriptionControllerTest extends TestBase {
         expectedDescriptions.add(new DescriptionDTO(description1));
         expectedDescriptions.add(new DescriptionDTO(description2));
 
-        Builder descriptionController = getBuilder("/getDescriptions/{itemId}" , persistedItem1.getId());
+        Builder descriptionController = getBuilder("/getDescriptions/{itemId}", persistedItem1.getId());
         Collection<DescriptionDTO> actualDescriptions = descriptionController.get(new GenericType<Collection<DescriptionDTO>>() {
         });
 
         assertEquals(expectedDescriptions, actualDescriptions);
+    }
+
+    @Test
+    public void shouldUpdateSpecificDescription() {
+
+        //Sets descriptions for item and persists item and descriptions into db
+
+        Item item = itemRepository.save(new Item("item 1"));
+        Description description = descriptionRepository.save(new Description(item, "item1 desc1"));
+
+        Builder descriptionController = getBuilder("/updateDescription/{descriptionId}", description.getId());
+        DescriptionDTO descriptionResponse = descriptionController.put(Entity.json(new UpdateDescriptionDTO("item1 updated desc")), new GenericType<DescriptionDTO>() {
+        });
+
+        assertEquals("item1 updated desc", descriptionResponse.getDescription());
+        assertEquals("item1 updated desc", descriptionRepository.findById(description.getId()).get().getDescription());
     }
 }
