@@ -2,6 +2,8 @@ package com.cepheid.cloud.skel;
 
 import com.cepheid.cloud.skel.dto.ItemDTO;
 import com.cepheid.cloud.skel.dto.CreateItemDTO;
+import com.cepheid.cloud.skel.dto.UpdateItemDTO;
+import com.cepheid.cloud.skel.model.Description;
 import com.cepheid.cloud.skel.model.Item;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,9 +14,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
@@ -33,8 +33,8 @@ public class ItemControllerTest extends TestBase {
         ItemDTO item2 = itemController.post(Entity.json(new CreateItemDTO(itemName2)), new GenericType<ItemDTO>() {
         });
 
-        ItemDTO expectedItem1 = new ItemDTO(itemRepository.getOne(1L));
-        ItemDTO expectedItem2 = new ItemDTO(itemRepository.getOne(2L));
+        ItemDTO expectedItem1 = new ItemDTO(itemRepository.getOne(item1.getItemId()));
+        ItemDTO expectedItem2 = new ItemDTO(itemRepository.getOne(item2.getItemId()));
 
         assertEquals(expectedItem1, item1);
         assertEquals(expectedItem2, item2);
@@ -109,5 +109,22 @@ public class ItemControllerTest extends TestBase {
         assertEquals(200, response.getStatus());
         assertEquals(1, itemRepository.findAll().size());
         assertEquals(leftItems, itemRepository.findAll());
+    }
+
+    @Test
+    public void shouldUpdateItem(){
+        Item item = new Item("item1");
+        itemRepository.save(item);
+
+        UpdateItemDTO inputForUpdate = new UpdateItemDTO("updated item1", "VALID");
+        Builder itemController = getBuilder("/updateItem/{itemId}", item.getId());
+        ItemDTO updatedItemResponse = itemController.put(Entity.json(inputForUpdate), new GenericType<ItemDTO>(){});
+
+        assertEquals("updated item1", updatedItemResponse.getName());
+        assertEquals("VALID", updatedItemResponse.getState().toString());
+
+        Item updatedItemInDb = itemRepository.findById(item.getId()).get();
+        assertEquals("updated item1" , updatedItemInDb.getName());
+        assertEquals("VALID" , updatedItemInDb.getState().toString());
     }
 }

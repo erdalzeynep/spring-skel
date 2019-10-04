@@ -44,8 +44,8 @@ public class ItemService {
         }
     }
 
-    public Item updateItem(Item updatedItem) {
-        return repository.save(updatedItem);
+    public Item updateItem(Item item) {
+        return repository.save(item);
     }
 
     public void deleteItem(Item item) {
