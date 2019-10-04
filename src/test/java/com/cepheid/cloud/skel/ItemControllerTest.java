@@ -87,7 +87,7 @@ public class ItemControllerTest extends TestBase {
     }
 
     @Test
-    public void shouldDeleteAllItemsWithGivenState(){
+    public void shouldDeleteAllItemsWithGivenState() {
         Item item1 = new Item("item1");
         Item item2 = new Item("item2");
         Item item3 = new Item("item3");
@@ -101,7 +101,8 @@ public class ItemControllerTest extends TestBase {
         itemRepository.save(item3);
 
         Builder itemController = getBuilder("/deleteItems/{state}", "undefined");
-        Response response = itemController.delete(new GenericType<Response>(){});
+        Response response = itemController.delete(new GenericType<Response>() {
+        });
 
         List<Item> leftItems = new ArrayList<>();
         leftItems.add(item3);
@@ -112,19 +113,20 @@ public class ItemControllerTest extends TestBase {
     }
 
     @Test
-    public void shouldUpdateItem(){
+    public void shouldUpdateItem() {
         Item item = new Item("item1");
         itemRepository.save(item);
 
         UpdateItemDTO inputForUpdate = new UpdateItemDTO("updated item1", "VALID");
         Builder itemController = getBuilder("/updateItem/{itemId}", item.getId());
-        ItemDTO updatedItemResponse = itemController.put(Entity.json(inputForUpdate), new GenericType<ItemDTO>(){});
+        ItemDTO updatedItemResponse = itemController.put(Entity.json(inputForUpdate), new GenericType<ItemDTO>() {
+        });
 
         assertEquals("updated item1", updatedItemResponse.getName());
         assertEquals("VALID", updatedItemResponse.getState().toString());
 
         Item updatedItemInDb = itemRepository.findById(item.getId()).get();
-        assertEquals("updated item1" , updatedItemInDb.getName());
-        assertEquals("VALID" , updatedItemInDb.getState().toString());
+        assertEquals("updated item1", updatedItemInDb.getName());
+        assertEquals("VALID", updatedItemInDb.getState().toString());
     }
 }

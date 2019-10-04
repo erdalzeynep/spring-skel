@@ -1,7 +1,7 @@
 package com.cepheid.cloud.skel.controller;
 
-import com.cepheid.cloud.skel.dto.ItemDTO;
 import com.cepheid.cloud.skel.dto.CreateItemDTO;
+import com.cepheid.cloud.skel.dto.ItemDTO;
 import com.cepheid.cloud.skel.dto.UpdateItemDTO;
 import com.cepheid.cloud.skel.model.Item;
 import com.cepheid.cloud.skel.service.DescriptionService;
@@ -92,13 +92,13 @@ public class ItemController {
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional(propagation = Propagation.REQUIRED)
     public ItemDTO updateItem(@PathParam("itemId") long itemId, @RequestBody UpdateItemDTO updateItemBody) {
-        Item item = new Item(updateItemBody);
-        item.setId(itemId);
-        if (itemService.getItemById(itemId) != null) {
-            Item responseItem = itemService.updateItem(item);
-            return new ItemDTO(responseItem);
-        }
-        else{
+        Item item = itemService.getItemById(itemId);
+        if (item != null) {
+            item.setName(updateItemBody.getName());
+            item.setState(Item.State.valueOf(updateItemBody.getState()));
+            Item updatedItem = itemService.updateItem(item);
+            return new ItemDTO(updatedItem);
+        } else {
             return null;
         }
     }
