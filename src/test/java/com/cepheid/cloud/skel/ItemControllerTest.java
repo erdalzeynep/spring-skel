@@ -3,6 +3,7 @@ package com.cepheid.cloud.skel;
 import com.cepheid.cloud.skel.dto.CreateItemDTO;
 import com.cepheid.cloud.skel.dto.ItemDTO;
 import com.cepheid.cloud.skel.dto.UpdateItemDTO;
+import com.cepheid.cloud.skel.dto.UpdateStateDTO;
 import com.cepheid.cloud.skel.model.Description;
 import com.cepheid.cloud.skel.model.Item;
 import org.junit.Test;
@@ -115,8 +116,7 @@ public class ItemControllerTest extends TestBase {
         Description description2 = descriptionRepository.save(new Description(item, "item1 desc2"));
 
         Builder itemController = getBuilder("/deleteItem/{itemId}", item.getId());
-        itemController.delete(new GenericType<Response>() {
-        });
+        itemController.delete();
 
         assertFalse(descriptionRepository.findById(description1.getId()).isPresent());
         assertFalse(descriptionRepository.findById(description2.getId()).isPresent());
@@ -164,5 +164,19 @@ public class ItemControllerTest extends TestBase {
         expectedItems.add(new ItemDTO(item2));
 
         assertArrayEquals(expectedItems.toArray(), responseItems.toArray());
+    }
+
+    @Test
+    public void shouldUpdateItemState() {
+        Item item = new Item("item1");
+        item.setState(Item.State.IN_STOCK);
+        itemRepository.save(item);
+
+        UpdateStateDTO updateInput = new UpdateStateDTO(Item.State.OUT_OF_STOCK);
+        Builder itemController = getBuilder("/setState/{itemId}", item.getId());
+        itemController.put(Entity.json(updateInput));
+
+        Item.State updatedState = itemRepository.findById(item.getId()).get().getState();
+        assertEquals(Item.State.OUT_OF_STOCK , updatedState);
     }
 }

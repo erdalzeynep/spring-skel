@@ -27,12 +27,12 @@ public class DescriptionControllerTest extends TestBase {
 
         Builder descriptionController = getBuilder("/addDescription");
         String expectedDescription = "item1 desc1";
-        DescriptionDTO description = descriptionController.post(Entity.json(new CreateDescriptionDTO(persistedItem.getId(), expectedDescription)), new GenericType<DescriptionDTO>() {
+        DescriptionDTO response = descriptionController.post(Entity.json(new CreateDescriptionDTO(persistedItem.getId(), expectedDescription)), new GenericType<DescriptionDTO>() {
         });
 
         String persistedDescription = descriptionRepository.findAll().get(0).getDescription();
 
-        assertEquals(expectedDescription, description.getDescription());
+        assertEquals(expectedDescription, response.getDescription());
         assertEquals(expectedDescription, persistedDescription);
     }
 
