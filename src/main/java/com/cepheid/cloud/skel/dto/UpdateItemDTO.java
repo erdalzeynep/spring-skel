@@ -1,12 +1,14 @@
 package com.cepheid.cloud.skel.dto;
 
+import com.cepheid.cloud.skel.model.Item;
+
 public class UpdateItemDTO {
     private String name;
-    private String state;
+    private Item.State state;
 
-    public UpdateItemDTO(String name, String state) {
+    public UpdateItemDTO(String name, Item.State state) {
         this.name = name;
-        this.state = state.toUpperCase();
+        this.state = state;
     }
 
     public UpdateItemDTO() {
@@ -20,11 +22,11 @@ public class UpdateItemDTO {
         this.name = name;
     }
 
-    public String getState() {
+    public Item.State getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(Item.State state) {
         this.state = state;
     }
 }

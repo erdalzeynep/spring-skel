@@ -9,6 +9,5 @@ import java.util.List;
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
-    public void deleteItemsByState(Item.State state);
     public List<Item> findByName(String name);
 }

@@ -1,11 +1,10 @@
 package com.cepheid.cloud.skel;
 
-import com.cepheid.cloud.skel.dto.ItemDTO;
 import com.cepheid.cloud.skel.dto.CreateItemDTO;
+import com.cepheid.cloud.skel.dto.ItemDTO;
 import com.cepheid.cloud.skel.dto.UpdateItemDTO;
 import com.cepheid.cloud.skel.model.Description;
 import com.cepheid.cloud.skel.model.Item;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -15,7 +14,9 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -88,47 +89,21 @@ public class ItemControllerTest extends TestBase {
     }
 
     @Test
-    public void shouldDeleteAllItemsWithGivenState() {
-        Item item1 = new Item("item1");
-        Item item2 = new Item("item2");
-        Item item3 = new Item("item3");
-
-        item1.setState(Item.State.UNDEFINED);
-        item2.setState(Item.State.UNDEFINED);
-        item3.setState(Item.State.INVALID);
-
-        itemRepository.save(item1);
-        itemRepository.save(item2);
-        itemRepository.save(item3);
-
-        Builder itemController = getBuilder("/deleteItems/{state}", "undefined");
-        Response response = itemController.delete(new GenericType<Response>() {
-        });
-
-        List<Item> leftItems = new ArrayList<>();
-        leftItems.add(item3);
-
-        assertEquals(200, response.getStatus());
-        assertEquals(1, itemRepository.findAll().size());
-        assertEquals(leftItems, itemRepository.findAll());
-    }
-
-    @Test
     public void shouldUpdateItem() {
         Item item = new Item("item1");
         itemRepository.save(item);
 
-        UpdateItemDTO inputForUpdate = new UpdateItemDTO("updated item1", "VALID");
+        UpdateItemDTO inputForUpdate = new UpdateItemDTO("updated item1", Item.State.IN_STOCK);
         Builder itemController = getBuilder("/updateItem/{itemId}", item.getId());
         ItemDTO updatedItemResponse = itemController.put(Entity.json(inputForUpdate), new GenericType<ItemDTO>() {
         });
 
         assertEquals("updated item1", updatedItemResponse.getName());
-        assertEquals("VALID", updatedItemResponse.getState().toString());
+        assertEquals(Item.State.IN_STOCK, updatedItemResponse.getState());
 
         Item updatedItemInDb = itemRepository.findById(item.getId()).get();
         assertEquals("updated item1", updatedItemInDb.getName());
-        assertEquals("VALID", updatedItemInDb.getState().toString());
+        assertEquals(Item.State.IN_STOCK, updatedItemInDb.getState());
     }
 
     @Test

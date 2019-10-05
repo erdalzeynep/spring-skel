@@ -3,6 +3,8 @@ package com.cepheid.cloud.skel.model;
 import com.cepheid.cloud.skel.dto.CreateItemDTO;
 import com.cepheid.cloud.skel.dto.UpdateItemDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -14,31 +16,19 @@ public class Item extends AbstractEntity {
     @Column
     private String name;
     @Column
-    private State state ;
+    private State state;
 
     @JsonIgnoreProperties("item")
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "item", cascade = CascadeType.ALL)
     private Set<Description> descriptions = new HashSet<>();
 
     public enum State {
-        VALID {
-            @Override
-            public String toString() {
-                return "VALID";
-            }
-        },
-        INVALID {
-            @Override
-            public String toString() {
-                return "INVALID";
-            }
-        },
-        UNDEFINED {
-            @Override
-            public String toString() {
-                return "UNDEFINED";
-            }
-        }
+        @JsonProperty("IN STOCK")
+        IN_STOCK,
+        @JsonProperty("SHORT STOCK")
+        SHORT_STOCK,
+        @JsonProperty("OUT OF STOCK")
+        OUT_OF_STOCK;
     }
 
     public Item() {
@@ -58,9 +48,9 @@ public class Item extends AbstractEntity {
         this.name = createItemDTO.getName();
     }
 
-    public Item(UpdateItemDTO itemDTO){
+    public Item(UpdateItemDTO itemDTO) {
         this.name = itemDTO.getName();
-        this.state = State.valueOf(itemDTO.getState());
+        this.state = itemDTO.getState();
     }
 
     public String getName() {

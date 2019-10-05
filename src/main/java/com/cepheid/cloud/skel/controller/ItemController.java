@@ -73,20 +73,6 @@ public class ItemController {
         }
     }
 
-    @DELETE
-    @Path("/deleteItems/{state}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional(propagation = Propagation.REQUIRED)
-    public Response deleteItemsByState(@PathParam("state") String state) {
-        List<Item> itemsToBeDeleted = itemService.getItemsByState(state);
-        if (itemsToBeDeleted.size() != 0) {
-            itemService.deleteItems(itemsToBeDeleted);
-            return Response.status(200).entity("Items are deleted").build();
-        } else {
-            return Response.status(204).build();
-        }
-    }
-
     @PUT
     @Path("/updateItem/{itemId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -95,7 +81,7 @@ public class ItemController {
         Item item = itemService.getItemById(itemId);
         if (item != null) {
             item.setName(updateItemBody.getName());
-            item.setState(Item.State.valueOf(updateItemBody.getState()));
+            item.setState(updateItemBody.getState());
             Item updatedItem = itemService.updateItem(item);
             return new ItemDTO(updatedItem);
         } else {
