@@ -52,7 +52,7 @@ public class ItemController {
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional(propagation = Propagation.REQUIRED)
     public ItemDTO addItem(@RequestBody CreateItemDTO itemRequest) {
-        Item item = new Item(itemRequest);
+        Item item = new Item(itemRequest.getName());
         itemService.addItem(item);
         return new ItemDTO(item);
     }

@@ -42,11 +42,6 @@ public class Item extends AbstractEntity {
         this.descriptions = descriptions;
     }
 
-    public Item(CreateItemDTO createItemDTO) {
-
-        this.name = createItemDTO.getName();
-    }
-
     public Item(UpdateItemDTO itemDTO) {
         this.name = itemDTO.getName();
         this.state = itemDTO.getState();
