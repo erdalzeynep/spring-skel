@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface DescriptionRepository extends JpaRepository<Description, Long> {
     public List<Description> findDescriptionsByItem(Item item);
-    public List<Description> findByDescription(String description);
+    public List<Description> findByDescriptionContaining(String description);
 }

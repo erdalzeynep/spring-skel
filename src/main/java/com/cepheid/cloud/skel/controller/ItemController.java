@@ -100,19 +100,6 @@ public class ItemController {
         return returnedItems;
     }
 
-    @GET
-    @Path("/getItemsByDescription/{description}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
-    public Collection<ItemDTO> getItemsByGivenDescription(@PathParam("description") String description) {
-        Set<Item> items = itemService.getItemsByDescription(description);
-        List<ItemDTO> returnedItems = new ArrayList<>();
-        for (Item item : items) {
-            returnedItems.add(new ItemDTO(item));
-        }
-        return returnedItems;
-    }
-
     @PUT
     @Path("/setState/{itemId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -134,6 +121,19 @@ public class ItemController {
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
     public Collection<ItemDTO> searchItemsByName(@QueryParam("search-text") String searchText) {
         List<Item> items = itemService.getItemsByNameContaining(searchText);
+        List<ItemDTO> returnedItems = new ArrayList<>();
+        for (Item item : items) {
+            returnedItems.add(new ItemDTO(item));
+        }
+        return returnedItems;
+    }
+
+    @GET
+    @Path("/searchItems/byDescription")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
+    public Collection<ItemDTO> searchItemsByDescription(@QueryParam("search-text") String searchText) {
+        Set<Item> items = itemService.getItemsByDescriptionContaining(searchText);
         List<ItemDTO> returnedItems = new ArrayList<>();
         for (Item item : items) {
             returnedItems.add(new ItemDTO(item));

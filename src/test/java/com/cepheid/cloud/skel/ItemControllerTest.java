@@ -1,9 +1,11 @@
 package com.cepheid.cloud.skel;
 
-import com.cepheid.cloud.skel.dto.*;
+import com.cepheid.cloud.skel.dto.CreateItemDTO;
+import com.cepheid.cloud.skel.dto.ItemDTO;
+import com.cepheid.cloud.skel.dto.UpdateItemDTO;
+import com.cepheid.cloud.skel.dto.UpdateStateDTO;
 import com.cepheid.cloud.skel.model.Description;
 import com.cepheid.cloud.skel.model.Item;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -139,32 +141,6 @@ public class ItemControllerTest extends TestBase {
     }
 
     @Test
-    public void shouldGetItemsByItemDescription() {
-        String description = "desc";
-        Item item1 = itemRepository.save(new Item("item1"));
-        Item item2 = itemRepository.save(new Item("item2"));
-        Item item3 = itemRepository.save(new Item("item3"));
-
-
-        descriptionRepository.save(new Description(item1, description));
-        descriptionRepository.save(new Description(item2, description));
-        descriptionRepository.save(new Description(item3, "different description"));
-
-        item1 = itemRepository.findById(item1.getId()).get();
-        item2 = itemRepository.findById(item2.getId()).get();
-
-        Builder itemController = getBuilder("/getItemsByDescription/{description}", description);
-        List<ItemDTO> responseItems = itemController.get(new GenericType<List<ItemDTO>>() {
-        });
-
-        List<ItemDTO> expectedItems = new ArrayList<>();
-        expectedItems.add(new ItemDTO(item1));
-        expectedItems.add(new ItemDTO(item2));
-
-        assertArrayEquals(expectedItems.toArray(), responseItems.toArray());
-    }
-
-    @Test
     public void shouldUpdateItemState() {
         Item item = new Item("item1");
         item.setState(Item.State.IN_STOCK);
@@ -186,6 +162,31 @@ public class ItemControllerTest extends TestBase {
         Item item3 = itemRepository.save(new Item("item3"));
 
         Builder itemController = getBuilder("/searchItems/byName?search-text=ar");
+        Collection<ItemDTO> response = itemController.get(new GenericType<Collection<ItemDTO>>() {
+        });
+
+        List<ItemDTO> expectedResult = new ArrayList<>();
+        expectedResult.add(new ItemDTO(item1));
+        expectedResult.add(new ItemDTO(item2));
+
+        assertArrayEquals(expectedResult.toArray(), response.toArray());
+    }
+
+    @Test
+    public void shouldSearchAndGetItemsByDescription(){
+
+        Item item1 = itemRepository.save(new Item("Alice in Wonderland"));
+        Item item2 = itemRepository.save(new Item("The adventures of Huckleberry Finn"));
+        Item item3 = itemRepository.save(new Item("Homodeus"));
+
+        descriptionRepository.save(new Description(item1, "Contains adventures of Alice"));
+        descriptionRepository.save(new Description(item2, "New adventures"));
+        descriptionRepository.save(new Description(item3, "Tells what happened behind"));
+
+        item1 = itemRepository.findById(item1.getId()).get();
+        item2 = itemRepository.findById(item2.getId()).get();
+
+        Builder itemController = getBuilder("/searchItems/byDescription?search-text=adventure");
         Collection<ItemDTO> response = itemController.get(new GenericType<Collection<ItemDTO>>() {
         });
 
