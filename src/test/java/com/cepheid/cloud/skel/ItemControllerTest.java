@@ -1,11 +1,9 @@
 package com.cepheid.cloud.skel;
 
-import com.cepheid.cloud.skel.dto.CreateItemDTO;
-import com.cepheid.cloud.skel.dto.ItemDTO;
-import com.cepheid.cloud.skel.dto.UpdateItemDTO;
-import com.cepheid.cloud.skel.dto.UpdateStateDTO;
+import com.cepheid.cloud.skel.dto.*;
 import com.cepheid.cloud.skel.model.Description;
 import com.cepheid.cloud.skel.model.Item;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -177,6 +175,24 @@ public class ItemControllerTest extends TestBase {
         itemController.put(Entity.json(updateInput));
 
         Item.State updatedState = itemRepository.findById(item.getId()).get().getState();
-        assertEquals(Item.State.OUT_OF_STOCK , updatedState);
+        assertEquals(Item.State.OUT_OF_STOCK, updatedState);
+    }
+
+    @Test
+    public void shouldSearchAndGetItemsByNameContaining() {
+
+        Item item1 = itemRepository.save(new Item("Harry Potter"));
+        Item item2 = itemRepository.save(new Item("Dark Knight"));
+        Item item3 = itemRepository.save(new Item("item3"));
+
+        Builder itemController = getBuilder("/searchItems/byName?search-text=ar");
+        Collection<ItemDTO> response = itemController.get(new GenericType<Collection<ItemDTO>>() {
+        });
+
+        List<ItemDTO> expectedResult = new ArrayList<>();
+        expectedResult.add(new ItemDTO(item1));
+        expectedResult.add(new ItemDTO(item2));
+
+        assertArrayEquals(expectedResult.toArray(), response.toArray());
     }
 }

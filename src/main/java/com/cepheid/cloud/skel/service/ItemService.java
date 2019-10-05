@@ -46,12 +46,16 @@ public class ItemService {
         repository.delete(item);
     }
 
-    public Set<Item> getItemsByDescriptionList(String descriptionText) {
-        List<Description> descriptions = descriptionService.getDescriptionsByDescription(descriptionText);
+    public Set<Item> getItemsByDescription(String descriptionText) {
+        List<Description> descriptions = descriptionService.getDescriptionsByDescriptionText(descriptionText);
         Set<Item> items = new HashSet<>();
         for (Description description : descriptions) {
             items.add(description.getItem());
         }
         return items;
+    }
+
+    public List<Item> getItemsByNameContaining(String searchText){
+        return repository.findByNameContaining(searchText);
     }
 }

@@ -4,7 +4,6 @@ import com.cepheid.cloud.skel.dto.CreateItemDTO;
 import com.cepheid.cloud.skel.dto.UpdateItemDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -23,11 +22,11 @@ public class Item extends AbstractEntity {
     private Set<Description> descriptions = new HashSet<>();
 
     public enum State {
-        @JsonProperty("IN STOCK")
+        @JsonProperty("IN_STOCK")
         IN_STOCK,
-        @JsonProperty("SHORT STOCK")
-        SHORT_STOCK,
-        @JsonProperty("OUT OF STOCK")
+        @JsonProperty("SHORT_ON_STOCK")
+        SHORT_ON_STOCK,
+        @JsonProperty("OUT_OF_STOCK")
         OUT_OF_STOCK;
     }
 

@@ -4,9 +4,7 @@ import com.cepheid.cloud.skel.dto.CreateItemDTO;
 import com.cepheid.cloud.skel.dto.ItemDTO;
 import com.cepheid.cloud.skel.dto.UpdateItemDTO;
 import com.cepheid.cloud.skel.dto.UpdateStateDTO;
-import com.cepheid.cloud.skel.model.Description;
 import com.cepheid.cloud.skel.model.Item;
-import com.cepheid.cloud.skel.service.DescriptionService;
 import com.cepheid.cloud.skel.service.ItemService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -108,7 +105,7 @@ public class ItemController {
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
     public Collection<ItemDTO> getItemsByGivenDescription(@PathParam("description") String description) {
-        Set<Item> items = itemService.getItemsByDescriptionList(description);
+        Set<Item> items = itemService.getItemsByDescription(description);
         List<ItemDTO> returnedItems = new ArrayList<>();
         for (Item item : items) {
             returnedItems.add(new ItemDTO(item));
@@ -129,5 +126,18 @@ public class ItemController {
         } else {
             return null;
         }
+    }
+
+    @GET
+    @Path("/searchItems/byName")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
+    public Collection<ItemDTO> searchItemsByName(@QueryParam("search-text") String searchText) {
+        List<Item> items = itemService.getItemsByNameContaining(searchText);
+        List<ItemDTO> returnedItems = new ArrayList<>();
+        for (Item item : items) {
+            returnedItems.add(new ItemDTO(item));
+        }
+        return returnedItems;
     }
 }

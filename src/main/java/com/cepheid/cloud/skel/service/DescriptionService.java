@@ -40,7 +40,7 @@ public class DescriptionService {
         return descriptionRepository.save(description);
     }
 
-    public List<Description> getDescriptionsByDescription(String description) {
+    public List<Description> getDescriptionsByDescriptionText(String description) {
         return descriptionRepository.findByDescription(description);
     }
 }
