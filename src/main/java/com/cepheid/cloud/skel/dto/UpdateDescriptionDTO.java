@@ -33,4 +33,9 @@ public class UpdateDescriptionDTO {
         UpdateDescriptionDTO that = (UpdateDescriptionDTO) o;
         return Objects.equals(description, that.description);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(description);
+    }
 }

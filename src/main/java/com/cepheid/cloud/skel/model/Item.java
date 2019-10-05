@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -49,6 +48,11 @@ public class Item extends AbstractEntity {
         this.name = name;
     }
 
+    public Item(String name, Set<Description> descriptions) {
+        this.name = name;
+        this.descriptions = descriptions;
+    }
+
     public Item(CreateItemDTO createItemDTO) {
 
         this.name = createItemDTO.getName();
@@ -81,16 +85,5 @@ public class Item extends AbstractEntity {
 
     public void setDescriptions(Set<Description> descriptions) {
         this.descriptions = descriptions;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        Item item = (Item) o;
-        return Objects.equals(name, item.name) &&
-                state == item.state &&
-                Objects.equals(descriptions, item.descriptions);
     }
 }

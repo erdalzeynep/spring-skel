@@ -14,6 +14,7 @@ import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.GenericType;
 import java.util.*;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
@@ -55,7 +56,7 @@ public class DescriptionControllerTest extends TestBase {
         Collection<DescriptionDTO> actualDescriptions = descriptionController.get(new GenericType<Collection<DescriptionDTO>>() {
         });
 
-        assertEquals(expectedDescriptions, actualDescriptions);
+        assertArrayEquals(expectedDescriptions.toArray(), actualDescriptions.toArray());
     }
 
     @Test

@@ -40,4 +40,9 @@ public class DescriptionDTO {
         return Objects.equals(itemId, that.itemId) &&
                 Objects.equals(description, that.description);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(itemId, description);
+    }
 }

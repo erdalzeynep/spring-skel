@@ -3,6 +3,7 @@ package com.cepheid.cloud.skel.controller;
 import com.cepheid.cloud.skel.dto.CreateItemDTO;
 import com.cepheid.cloud.skel.dto.ItemDTO;
 import com.cepheid.cloud.skel.dto.UpdateItemDTO;
+import com.cepheid.cloud.skel.model.Description;
 import com.cepheid.cloud.skel.model.Item;
 import com.cepheid.cloud.skel.service.DescriptionService;
 import com.cepheid.cloud.skel.service.ItemService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -19,6 +21,7 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 // curl http:/localhost:9443/app/api/1.0/items
 
@@ -32,9 +35,6 @@ public class ItemController {
     public ItemController(ItemService itemService) {
         this.itemService = itemService;
     }
-
-    @Autowired
-    private DescriptionService descriptionService;
 
     @GET
     @Path("/getItems")
@@ -101,5 +101,31 @@ public class ItemController {
         } else {
             return null;
         }
+    }
+
+    @GET
+    @Path("/getItemsByName/{name}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
+    public Collection<ItemDTO> getItemsByGivenName(@PathParam("name") String name) {
+        List<Item> items = itemService.getItemsByName(name);
+        List<ItemDTO> returnedItems = new ArrayList<>();
+        for (Item item : items) {
+            returnedItems.add(new ItemDTO(item));
+        }
+        return returnedItems;
+    }
+
+    @GET
+    @Path("/getItemsByDescription/{description}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
+    public Collection<ItemDTO> getItemsByGivenDescription(@PathParam("description") String description) {
+        Set<Item> items = itemService.getItemsByDescriptionList(description);
+        List<ItemDTO> returnedItems = new ArrayList<>();
+        for (Item item : items) {
+            returnedItems.add(new ItemDTO(item));
+        }
+        return returnedItems;
     }
 }

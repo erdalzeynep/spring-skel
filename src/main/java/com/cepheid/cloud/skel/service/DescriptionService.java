@@ -22,10 +22,11 @@ public class DescriptionService {
         return descriptionRepository.save(description);
     }
 
-    public List<Description> getDescriptionsByItemId(Long itemId){
+    public List<Description> getDescriptionsByItemId(Long itemId) {
         Item item = itemRepository.getOne(itemId);
         return descriptionRepository.findDescriptionsByItem(item);
     }
+
     public Description getDescriptionById(Long descriptionId) {
         Optional description = descriptionRepository.findById(descriptionId);
         if (description.isPresent()) {
@@ -34,7 +35,12 @@ public class DescriptionService {
             return null;
         }
     }
-    public Description updateDescription(Description description){
+
+    public Description updateDescription(Description description) {
         return descriptionRepository.save(description);
+    }
+
+    public List<Description> getDescriptionsByDescription(String description) {
+        return descriptionRepository.findByDescription(description);
     }
 }

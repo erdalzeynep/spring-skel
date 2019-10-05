@@ -5,6 +5,7 @@ import com.cepheid.cloud.skel.dto.CreateItemDTO;
 import com.cepheid.cloud.skel.dto.UpdateItemDTO;
 import com.cepheid.cloud.skel.model.Description;
 import com.cepheid.cloud.skel.model.Item;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -16,8 +17,7 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 public class ItemControllerTest extends TestBase {
@@ -145,5 +145,49 @@ public class ItemControllerTest extends TestBase {
 
         assertFalse(descriptionRepository.findById(description1.getId()).isPresent());
         assertFalse(descriptionRepository.findById(description2.getId()).isPresent());
+    }
+
+    @Test
+    public void shouldGetItemsByItemName() {
+        String name = "item";
+        Item item1 = itemRepository.save(new Item(name));
+        Item item2 = itemRepository.save(new Item(name));
+        itemRepository.save(new Item("item3"));
+
+        Builder itemController = getBuilder("/getItemsByName/{name}", name);
+        Collection<ItemDTO> responseItems = itemController.get(new GenericType<Collection<ItemDTO>>() {
+        });
+
+        List<ItemDTO> expectedItems = new ArrayList<>();
+        expectedItems.add(new ItemDTO(item1));
+        expectedItems.add(new ItemDTO(item2));
+
+        assertArrayEquals(expectedItems.toArray(), responseItems.toArray());
+    }
+
+    @Test
+    public void shouldGetItemsByItemDescription() {
+        String description = "desc";
+        Item item1 = itemRepository.save(new Item("item1"));
+        Item item2 = itemRepository.save(new Item("item2"));
+        Item item3 = itemRepository.save(new Item("item3"));
+
+
+        descriptionRepository.save(new Description(item1, description));
+        descriptionRepository.save(new Description(item2, description));
+        descriptionRepository.save(new Description(item3, "different description"));
+
+        item1 = itemRepository.findById(item1.getId()).get();
+        item2 = itemRepository.findById(item2.getId()).get();
+
+        Builder itemController = getBuilder("/getItemsByDescription/{description}", description);
+        List<ItemDTO> responseItems = itemController.get(new GenericType<List<ItemDTO>>() {
+        });
+
+        List<ItemDTO> expectedItems = new ArrayList<>();
+        expectedItems.add(new ItemDTO(item1));
+        expectedItems.add(new ItemDTO(item2));
+
+        assertArrayEquals(expectedItems.toArray(), responseItems.toArray());
     }
 }

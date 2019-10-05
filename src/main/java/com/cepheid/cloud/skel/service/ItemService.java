@@ -1,19 +1,21 @@
 package com.cepheid.cloud.skel.service;
 
+import com.cepheid.cloud.skel.model.Description;
 import com.cepheid.cloud.skel.model.Item;
 import com.cepheid.cloud.skel.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 public class ItemService {
 
     @Autowired
     ItemRepository repository;
+
+    @Autowired
+    DescriptionService descriptionService;
 
     public Item addItem(Item item) {
         return repository.save(item);
@@ -43,6 +45,10 @@ public class ItemService {
         }
     }
 
+    public List<Item> getItemsByName(String name) {
+        return repository.findByName(name);
+    }
+
     public Item updateItem(Item item) {
         return repository.save(item);
     }
@@ -51,7 +57,16 @@ public class ItemService {
         repository.delete(item);
     }
 
-    public void deleteItems( List<Item> items) {
+    public void deleteItems(List<Item> items) {
         repository.deleteInBatch(items);
+    }
+
+    public Set<Item> getItemsByDescriptionList(String descriptionText) {
+        List<Description> descriptions = descriptionService.getDescriptionsByDescription(descriptionText);
+        Set<Item> items = new HashSet<>();
+        for (Description description : descriptions) {
+            items.add(description.getItem());
+        }
+        return items;
     }
 }

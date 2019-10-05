@@ -1,10 +1,11 @@
 package com.cepheid.cloud.skel.model;
 
-import com.cepheid.cloud.skel.dto.DescriptionDTO;
-import com.cepheid.cloud.skel.dto.UpdateDescriptionDTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Description extends AbstractEntity {

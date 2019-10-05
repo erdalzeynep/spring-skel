@@ -67,4 +67,9 @@ public class ItemDTO {
                 state == itemDTO.state &&
                 Objects.equals(descriptions, itemDTO.descriptions);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(itemId, name, state, descriptions);
+    }
 }
