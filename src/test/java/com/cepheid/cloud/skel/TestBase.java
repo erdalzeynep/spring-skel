@@ -10,8 +10,11 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
+import com.cepheid.cloud.skel.model.User;
 import com.cepheid.cloud.skel.repository.DescriptionRepository;
 import com.cepheid.cloud.skel.repository.ItemRepository;
+import com.cepheid.cloud.skel.repository.UserRepository;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,17 +39,27 @@ public class TestBase {
     @Autowired
     protected DescriptionRepository descriptionRepository;
 
+    @Autowired
+    protected UserRepository userRepository;
+
     @Before
     public void cleanDb(){
         itemRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
+    @Before
+    public void createTestUser(){
+        userRepository.save(new User("test_user", "pass"));
+    }
 
     @PostConstruct
     public void postConstruct() {
         pathPrefix = "/app/api/1.0";
         mServerUri = "http://localhost:" + mPort + pathPrefix;
+        HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic("test_user", "pass");
         mClient = createClient();
+        mClient.register(feature);
     }
 
     public Builder getBuilder(String path, Object... values) {
@@ -59,6 +72,7 @@ public class TestBase {
     }
 
     protected Client createClient() {
+
         ClientBuilder clientBuilder = ClientBuilder.newBuilder();
         return clientBuilder.build();
     }
